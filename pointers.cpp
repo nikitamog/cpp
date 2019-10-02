@@ -11,14 +11,26 @@ using namespace std;
 
 main() {
   
-  int a = 32, *ptr = &a;
+  int a = 32, *ptr = &a, *redundant = &a;
 
-  char ch = 'A', &cho = ch;
+  void* ref2ref = (void *)redundant;
   
-  cho += a;
+  //  char ch = 'A', &cho = ch;
   
-  *ptr += ch;
+  //  cho += a;
+  
+  //  *ptr += ch;
 
-  cout << a << ", " << ch << endl;
+  //  cout << a << ", " << ch << endl;
+
+  cout << "ptr " << ptr << endl;
+  cout << "redundant " << redundant << endl;
+
+  cout << "redundant's value after delete" << ref2ref;
+  delete ptr;
+
+
+  cout << "redundant after delete " << redundant << endl;
   
+
 }
