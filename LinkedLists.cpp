@@ -7,9 +7,16 @@
 */
 
 #include <stdexcept>
+#include <iostream>
 #include "LinkedLists.h"
 
 using namespace std;
+
+//============================================
+//============================================
+// NODE
+//============================================
+//============================================
 
 // constructors/destructors
 template <typename T>
@@ -73,6 +80,18 @@ Node<T> Node<T>::operator%(Node<T>& n)
     this->data = this->data % n->data;
     return *this;
 }
+
+// streams
+template<typename U>
+ostream& operator<<(ostream& os, Node<U> const &node)
+{
+    cout << node->data;
+    return os;
+}
+    
+//============================================
+//============================================
+// END NODE
 //============================================
 //============================================
 // CLASS: Linked List
@@ -198,8 +217,3 @@ void LinkedList<T>::insertLast(T* data)
     this->add(data);
 }
   
-template <typename T>
-int LinkedList<T>::size()
-{
-    return size;
-}
