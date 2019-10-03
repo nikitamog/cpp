@@ -20,73 +20,73 @@ using namespace std;
 
 // constructors/destructors
 template <typename T>
-Node<T>::Node(Node<T>& p,
-              T& d,
-              Node<T>& n)
-    :prev{p},data{d},next{n}{}
+Node<T>::Node(Node<T>& rPrev,
+              T& rData,
+              Node<T>& rNext)
+    :pPrev{rPrev},pData{rData},pNext{rNext}{}
 
 template <typename T>
-Node<T>::Node(T& d) {
-    Node(NULL,d,NULL);
+Node<T>::Node(T& rData) {
+    Node(NULL,rData,NULL);
 }
 
 template <typename T>
 Node<T>::~Node<T>()
 {
-    delete data;
+    delete pData;
 }
 //============================================
 // operators
 //============================================
 template <typename T>
-Node<T> Node<T>::operator=(Node<T>& n)
+Node<T> Node<T>::operator=(Node<T>& rN)
 {
-    this->data = n->data;
+    this->pData = rN->pData;
     return *this;
 }
 
 // arithmetic
 template <typename T>
-Node<T> Node<T>::operator+(Node<T>& n)
+Node<T> Node<T>::operator+(Node<T>& rN)
 {
-    this->data = this->data + n->data;
+    this->pData = this->pData + rN->pData;
     return *this;
 }
 
 template <typename T>
-Node<T> Node<T>::operator-(Node<T>& n)
+Node<T> Node<T>::operator-(Node<T>& rN)
 {
-    this->data = this->data - n->data;
+    this->pData = this->pData - rN->pData;
     return *this;
 }
 
 template <typename T>
-Node<T> Node<T>::operator*(Node<T>& n)
+Node<T> Node<T>::operator*(Node<T>& rN)
 {
-    this->data = this->data * n->data;
+    this->pData = this->pData * rN->pData;
     return *this;
 }
 
 template <typename T>
-Node<T> Node<T>::operator/(Node<T>& n)
+Node<T> Node<T>::operator/(Node<T>& rN)
 {
-    this->data = this->data / n->data;
+    this->pData = this->pData / rN->pData;
     return *this;
 }
 
 template <typename T>
-Node<T> Node<T>::operator%(Node<T>& n)
+Node<T> Node<T>::operator%(Node<T>& rN)
 {
-    this->data = this->data % n->data;
+    this->pData = this->pData % rN->pData;
     return *this;
 }
 
 // streams
 template<typename U>
-ostream& operator<<(ostream& os, Node<U> const &node)
+ostream& operator<<(ostream& rOStream, Node<U> const &rNode)
 {
-    cout << node->data;
-    return os;
+    cout << rNode->pData;
+    return rOStream;
 }
     
 //============================================
@@ -101,16 +101,16 @@ ostream& operator<<(ostream& os, Node<U> const &node)
 template <typename T>
 LinkedList<T>::~LinkedList() //destructor
 {
-    if (head == NULL) return;
-    Node<T>* curr = head;
-    Node<T>* next = curr->next;
-    while(next != NULL)
+    if (pHead == NULL) return;
+    Node<T>* pCurr = pHead;
+    Node<T>* pNext = pCurr->pNext;
+    while(pNext != NULL)
     {
-        delete *curr;
-        curr = next;
-        next = curr->next;
+        delete *pCurr;
+        pCurr = pNext;
+        pNext = pCurr->pNext;
     }
-    delete curr;
+    delete pCurr;
 }
 //============================================
 // operators
@@ -122,15 +122,15 @@ Node<T> LinkedList<T>::operator[](int index) const
     int i = index;
     // check lower bound
     if (i < 0) throw out_of_range("Linked List");  
-    Node<T>* curr = head;
-    while (curr != NULL && i > 0)
+    Node<T>* pCurr = pHead;
+    while (pCurr != NULL && i > 0)
     {
-        curr = curr.next;
+        pCurr = pCurr->pNext;
         --i;
     }  
     if (i > 0) throw out_of_range("Linked List");
     // check upper bound
-    return *curr;
+    return *pCurr;
 }
 //============================================  
 // methods
@@ -139,81 +139,93 @@ Node<T> LinkedList<T>::operator[](int index) const
 template <typename T>
 void LinkedList<T>::remove(int index)
 {
-    Node<T>* curr = &this[index];
-    curr->prev->next = curr->next;
-    curr->next->prev = curr->prev;
+    Node<T>* pCurr = &this[index];
+    if (index == 0)
+    {
+        pHead = pCurr->pNext;
+        delete pCurr;
+        return;
+    }
+    if (index == size) pTail = pCurr->pPrev;
+    pCurr->pPrev->pNext = pCurr->pNext;
+    pCurr->pNext->pPrev = pCurr->pPrev;
+    delete pCurr;
+    size--;
 }
 
 template <typename T>
-void LinkedList<T>::add(T* data, int index)
+void LinkedList<T>::add(T* pData, int index)
 {
     // check append
     if (index == size)
     {
-        add(data);
+        add(pData);
         return;
     }
-    Node<T>* curr = &this[index];
+    Node<T>* pCurr = &this[index];
     // check prepend.
-    if (index == 0) head = curr;
-    Node<T>* newnode = new Node<T>(curr,
-                                   data,
-                                   curr->next);
-    curr->next = newnode;
+    if (index == 0) pHead = pCurr;
+    Node<T>* newnode = new Node<T>(pCurr,
+                                   pData,
+                                   pCurr->pNext);
+    pCurr->pNext = newnode;
 }
 
 template <typename T>
-void LinkedList<T>::add(T* data)
+void LinkedList<T>::add(T* pData)
 {
     // last element
-    Node<T>* newnode = new Node<T>(tail,
-                                   data, NULL);
-    if(head==NULL) head = newnode;
-    tail = newnode;
+    Node<T>* newnode = new Node<T>(pTail,
+                                   pData, NULL);
+    if(pHead==NULL) pHead = newnode;
+    pTail = newnode;
 }
 
 template <typename T>
 bool LinkedList<T>::isEmpty() const
 {
-    return head == NULL;
+    return pHead == NULL;
 }
 
 template <typename T>
 int LinkedList<T>::length() const
 {
+    /*
     int i = 0;
-    Node<T>* curr = head;
-    while(curr != NULL)
+    Node<T>* pCurr = pHead;
+    while(pCurr != NULL)
     {
-        curr = curr->next;
+        pCurr = pCurr->pNext;
         ++i;
     }
     return i;
+    */
+    return size;
 }
 
 template <typename T>
 T* LinkedList<T>::front() const
 {
-    assert(head != NULL);
-    return head->data;
+    assert(pHead != NULL);
+    return pHead->pData;
 }
 
 template <typename T>
 T* LinkedList<T>::last() const
 {
-    assert(head != NULL);
-    return tail->data;
+    assert(pHead != NULL);
+    return pTail->pData;
 }
 
 template <typename T>
-void LinkedList<T>::insertFirst(T* data)
+void LinkedList<T>::insertFirst(T* pData)
 {
-    this->add(data, 0);
+    this->add(pData, 0);
 }
 
 template <typename T>
-void LinkedList<T>::insertLast(T* data)
+void LinkedList<T>::insertLast(T* pData)
 {
-    this->add(data);
+    this->add(pData);
 }
   

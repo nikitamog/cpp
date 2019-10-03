@@ -17,28 +17,28 @@ template <typename T>
 struct Node
 {
     // some generic type for data.
-    T* data;
+    T* pData;
 
-    Node<T>* next;
-    Node<T>* prev;
+    Node<T>* pNext;
+    Node<T>* pPrev;
 
     // arithmetic operators
     // for sorting methods, maybe.
-    Node<T> operator=(Node<T>& n);
-    Node<T> operator+(Node<T>& n);
-    Node<T> operator-(Node<T>& n);
-    Node<T> operator*(Node<T>& n);
-    Node<T> operator/(Node<T>& n);
-    Node<T> operator%(Node<T>& n);
+    Node<T> operator=(Node<T>& rN);
+    Node<T> operator+(Node<T>& rN);
+    Node<T> operator-(Node<T>& rN);
+    Node<T> operator*(Node<T>& rN);
+    Node<T> operator/(Node<T>& rN);
+    Node<T> operator%(Node<T>& rN);
 
-    Node<T>(T& d); // d for data
-    Node<T>(Node<T>& prev, T& data, Node<T>& next);
+    Node<T>(T& rData);
+    Node<T>(Node<T>& rPrev, T& pData, Node<T>& rNext);
     ~Node<T>();
     
 public:   
     // streams
     template <typename U>
-    friend ostream& operator<<(ostream& o, Node<U> const &node);
+    friend ostream& operator<<(ostream& rOStream, Node<U> const &rNode);
     
 }; //Node
 
@@ -46,8 +46,8 @@ template <typename T>
 class LinkedList // singley linked
 {
     // private by default.
-    Node<T>* head;
-    Node<T>* tail;
+    Node<T>* pHead;
+    Node<T>* pTail;
     int size; // update length
 
 public:
@@ -58,10 +58,10 @@ public:
     T* front() const;
     T* last() const;
     void remove(int index);
-    void add(T* data, int index);
-    void add(T* data); // appends data
-    void insertFirst(T* data); // TODO
-    void insertLast(T* data); // TODO
+    void add(T* pData, int index);
+    void add(T* pData); // appends data
+    void insertFirst(T* pData);
+    void insertLast(T* pData);
     Node<T> operator[](int index) const;  
   
 }; // Linked List
