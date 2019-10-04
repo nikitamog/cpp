@@ -83,7 +83,7 @@ Node<T> Node<T>::operator%(Node<T>& rN)
 
 // streams
 template<typename U>
-ostream& operator<<(ostream& rOStream, Node<U> const &rNode)
+ostream& operator<<(ostream& rOStream, const Node<U>& rNode)
 {
     cout << rNode->pData;
     return rOStream;
@@ -156,6 +156,9 @@ void LinkedList<T>::remove(int index)
 template <typename T>
 void LinkedList<T>::add(T* pData, int index)
 {
+    /* Adds an element to the list at the
+       specified index. One may not add
+       indeces that do not exist. */
     // check append
     if (index == size)
     {
@@ -165,15 +168,16 @@ void LinkedList<T>::add(T* pData, int index)
     Node<T>* pCurr = &this[index];
     // check prepend.
     if (index == 0) pHead = pCurr;
-    Node<T>* newnode = new Node<T>(pCurr,
+    Node<T>* newnode = new Node<T>(pCurr->pPrev,
                                    pData,
-                                   pCurr->pNext);
-    pCurr->pNext = newnode;
+                                   pCurr);
+    pCurr->pPrev = newnode;
 }
 
 template <typename T>
 void LinkedList<T>::add(T* pData)
 {
+    /* Prepends and element to the list. */
     // last element
     Node<T>* newnode = new Node<T>(pTail,
                                    pData, NULL);
@@ -228,4 +232,18 @@ void LinkedList<T>::insertLast(T* pData)
 {
     this->add(pData);
 }
-  
+
+template <typename U>
+ostream& operator<<(ostream& rOStream,
+                    const LinkedList<U>& rList)
+{
+    cout << "[";
+    Node<U>* pNewNode = rList->pHead;
+    for(int i = 0; i < rList->size - 1; ++i)
+    {
+        cout << pNewNode << ", ";
+        pNewNode = pNewNode->pNext;
+    }
+    cout << pNewNode << "]" << endl;
+}
+        

@@ -38,7 +38,7 @@ struct Node
 public:   
     // streams
     template <typename U>
-    friend ostream& operator<<(ostream& rOStream, Node<U> const &rNode);
+    friend ostream& operator<<(ostream& rOStream, const Node<U>& rNode);
     
 }; //Node
 
@@ -63,7 +63,10 @@ public:
     void insertFirst(T* pData);
     void insertLast(T* pData);
     Node<T> operator[](int index) const;  
-  
+
+    template <typename U>
+    friend ostream& operator<<(ostream& rOStream,
+                               const LinkedList<U>& rList);
 }; // Linked List
 
 #endif
