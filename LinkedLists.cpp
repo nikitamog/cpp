@@ -99,6 +99,10 @@ ostream& operator<<(ostream& rOStream, const Node<U>& rNode)
 //============================================
 
 template <typename T>
+LinkedList<T>::LinkedList()
+    :pHead{NULL}, pTail{NULL}, size{0}{}
+
+template <typename T>
 LinkedList<T>::~LinkedList() //destructor
 {
     if (pHead == NULL) return;

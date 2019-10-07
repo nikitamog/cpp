@@ -22,6 +22,7 @@ struct Node
     Node<T>* pNext;
     Node<T>* pPrev;
 
+public:
     // arithmetic operators
     // for sorting methods, maybe.
     Node<T> operator=(Node<T>& rN);
@@ -34,8 +35,7 @@ struct Node
     Node<T>(T& rData);
     Node<T>(Node<T>& rPrev, T& pData, Node<T>& rNext);
     ~Node<T>();
-    
-public:   
+
     // streams
     template <typename U>
     friend ostream& operator<<(ostream& rOStream, const Node<U>& rNode);
@@ -51,6 +51,7 @@ class LinkedList // singley linked
     int size; // update length
 
 public:
+    LinkedList(); //constructor
     ~LinkedList(); //destructor
 
     bool isEmpty() const;
