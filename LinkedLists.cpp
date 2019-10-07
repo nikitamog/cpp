@@ -19,18 +19,18 @@ using namespace std;
 //============================================
 
 // constructors/destructors
-template <typename T>
+template <class T>
 Node<T>::Node(Node<T>& rPrev,
               T& rData,
               Node<T>& rNext)
     :pPrev{rPrev},pData{rData},pNext{rNext}{}
 
-template <typename T>
+template <class T>
 Node<T>::Node(T& rData) {
     Node(NULL,rData,NULL);
 }
 
-template <typename T>
+template <class T>
 Node<T>::~Node<T>()
 {
     delete pData;
@@ -38,7 +38,7 @@ Node<T>::~Node<T>()
 //============================================
 // operators
 //============================================
-template <typename T>
+template <class T>
 Node<T> Node<T>::operator=(Node<T>& rN)
 {
     this->pData = rN->pData;
@@ -46,35 +46,35 @@ Node<T> Node<T>::operator=(Node<T>& rN)
 }
 
 // arithmetic
-template <typename T>
+template <class T>
 Node<T> Node<T>::operator+(Node<T>& rN)
 {
     this->pData = this->pData + rN->pData;
     return *this;
 }
 
-template <typename T>
+template <class T>
 Node<T> Node<T>::operator-(Node<T>& rN)
 {
     this->pData = this->pData - rN->pData;
     return *this;
 }
 
-template <typename T>
+template <class T>
 Node<T> Node<T>::operator*(Node<T>& rN)
 {
     this->pData = this->pData * rN->pData;
     return *this;
 }
 
-template <typename T>
+template <class T>
 Node<T> Node<T>::operator/(Node<T>& rN)
 {
     this->pData = this->pData / rN->pData;
     return *this;
 }
 
-template <typename T>
+template <class T>
 Node<T> Node<T>::operator%(Node<T>& rN)
 {
     this->pData = this->pData % rN->pData;
@@ -82,7 +82,7 @@ Node<T> Node<T>::operator%(Node<T>& rN)
 }
 
 // streams
-template<typename U>
+template<class U>
 ostream& operator<<(ostream& rOStream, const Node<U>& rNode)
 {
     cout << rNode->pData;
@@ -98,11 +98,11 @@ ostream& operator<<(ostream& rOStream, const Node<U>& rNode)
 //============================================
 //============================================
 
-template <typename T>
+template <class T>
 LinkedList<T>::LinkedList()
     :pHead{NULL}, pTail{NULL}, size{0}{}
 
-template <typename T>
+template <class T>
 LinkedList<T>::~LinkedList() //destructor
 {
     if (pHead == NULL) return;
@@ -120,7 +120,7 @@ LinkedList<T>::~LinkedList() //destructor
 // operators
 //============================================
 
-template <typename T>
+template <class T>
 Node<T> LinkedList<T>::operator[](int index) const
 {
     int i = index;
@@ -140,7 +140,7 @@ Node<T> LinkedList<T>::operator[](int index) const
 // methods
 //============================================
 
-template <typename T>
+template <class T>
 void LinkedList<T>::remove(int index)
 {
     Node<T>* pCurr = &this[index];
@@ -157,7 +157,7 @@ void LinkedList<T>::remove(int index)
     size--;
 }
 
-template <typename T>
+template <class T>
 void LinkedList<T>::add(T* pData, int index)
 {
     /* Adds an element to the list at the
@@ -178,7 +178,7 @@ void LinkedList<T>::add(T* pData, int index)
     pCurr->pPrev = newnode;
 }
 
-template <typename T>
+template <class T>
 void LinkedList<T>::add(T* pData)
 {
     /* Prepends and element to the list. */
@@ -189,13 +189,13 @@ void LinkedList<T>::add(T* pData)
     pTail = newnode;
 }
 
-template <typename T>
+template <class T>
 bool LinkedList<T>::isEmpty() const
 {
     return pHead == NULL;
 }
 
-template <typename T>
+template <class T>
 int LinkedList<T>::length() const
 {
     /*
@@ -211,33 +211,33 @@ int LinkedList<T>::length() const
     return size;
 }
 
-template <typename T>
+template <class T>
 T* LinkedList<T>::front() const
 {
     assert(pHead != NULL);
     return pHead->pData;
 }
 
-template <typename T>
+template <class T>
 T* LinkedList<T>::last() const
 {
     assert(pHead != NULL);
     return pTail->pData;
 }
 
-template <typename T>
+template <class T>
 void LinkedList<T>::insertFirst(T* pData)
 {
     this->add(pData, 0);
 }
 
-template <typename T>
+template <class T>
 void LinkedList<T>::insertLast(T* pData)
 {
     this->add(pData);
 }
 
-template <typename U>
+template <class U>
 ostream& operator<<(ostream& rOStream,
                     const LinkedList<U>& rList)
 {
@@ -249,5 +249,6 @@ ostream& operator<<(ostream& rOStream,
         pNewNode = pNewNode->pNext;
     }
     cout << pNewNode << "]" << endl;
+    return rOStream;
 }
         

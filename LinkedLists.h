@@ -13,7 +13,7 @@
 
 using namespace std;
 
-template <typename T>
+template <class T>
 struct Node
 {
     // some generic type for data.
@@ -37,12 +37,12 @@ public:
     ~Node<T>();
 
     // streams
-    template <typename U>
+    template <class U>
     friend ostream& operator<<(ostream& rOStream, const Node<U>& rNode);
     
 }; //Node
 
-template <typename T>
+template <class T>
 class LinkedList // singley linked
 {
     // private by default.
@@ -65,7 +65,7 @@ public:
     void insertLast(T* pData);
     Node<T> operator[](int index) const;  
 
-    template <typename U>
+    template <class U>
     friend ostream& operator<<(ostream& rOStream,
                                const LinkedList<U>& rList);
 }; // Linked List
