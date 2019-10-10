@@ -26,9 +26,19 @@ public:
   const int getB(){return b;}
 };
 
+class Bar
+{
+    Parent P1;
+public:
+    Bar()
+        {
+            P1;
+        }
+};
 main()
 {
   Child Foo;
+  Bar b;
   //printf("%i", Foo.getA());
   cout << Foo.getA();
 }
