@@ -32,10 +32,10 @@ public:
     Node<T> operator*(Node<T>& rN);
     Node<T> operator/(Node<T>& rN);
     Node<T> operator%(Node<T>& rN);
-
-    Node<T>(T Data);
-    Node<T>(Node<T>* pPrev, T Data, Node<T>* pNext);
-    // ~Node<T>();
+    bool operator!=( T&);
+    Node<T>(T& rData);
+    Node<T>(Node<T>* pPrev, T& rData, Node<T>* pNext);
+    ~Node<T>();
 
     // streams
     template <class U>
@@ -60,11 +60,10 @@ public:
     T* front() const;
     T* last() const;
     void remove(int index);
-    void add(T Data, int index);
-    void add(T Data); // appends data
-    void insertFirst(T Data);
-    void insertLast(T Data);
-    void printReverse();
+    void add(T& rData, int index);
+    void add(T& rData); // appends data
+    void insertFirst(T& rData);
+    void insertLast(T& rData);
     Node<T>& operator[](int index) const;  
 
     template <class U>
@@ -82,23 +81,20 @@ public:
 
 // constructors/destructors
 template <class T>
-Node<T>::Node(Node<T>* pPrev,
-              T Data,
-              Node<T>* pNext)
-    :pPrev{pPrev},Data{Data},pNext{pNext}{}
+Node<T>::Node(Node<T>* _pPrev,
+              T& _rData,
+              Node<T>* _pNext)
+    :pPrev(_pPrev),Data(_rData),pNext(_pNext){}
 
 template <class T>
-Node<T>::Node(T Data) {
-    Node(NULL,Data,NULL);
+Node<T>::Node(T& rData) {
+    Node(NULL,rData,NULL);
 }
 
-/*
 template <class T>
 Node<T>::~Node<T>()
 {
 }
-*/
-
 //============================================
 // operators
 //============================================
@@ -149,16 +145,10 @@ Node<T> Node<T>::operator%(Node<T>& rN)
 template<class U>
 ostream& operator<<(ostream& rOStream, const Node<U>& rNode)
 {
-    // if(!rNode)
-    // {
-    //     cout << "NULL";
-    //     return rOStream;
-    //     }
+    rOStream<<rNode.Data<<endl;
     
-    cout << rNode.Data;
     return rOStream;
 }
-    
 //============================================
 //============================================
 // END NODE
@@ -215,29 +205,17 @@ Node<T>& LinkedList<T>::operator[](int index) const
 template <class T>
 void LinkedList<T>::remove(int index)
 {
-    if(index >= size || index < 0) throw out_of_range("Linked List");
+    Node<T>* temp = &(*this)[index];
+    Node<T>* pCurr =temp;
     
-    Node<T> temp = (*this)[index];
-    Node<T>* pCurr = &temp;
-    if(size == 1)
-    {
-        pHead = NULL;
-        pTail = NULL;
-        delete pCurr;
-    }
-
     if (index == 0)
     {
         pHead = pCurr->pNext;
-        if(pHead){
-            pHead->pPrev = NULL;
-        }
         delete pCurr;
         size--;
         return;
     }
-
-    if (index == size-1) pTail = pCurr->pPrev;
+    if (index == size) pTail = pCurr->pPrev;
     
     pCurr->pPrev->pNext = pCurr->pNext;
     pCurr->pNext->pPrev = pCurr->pPrev;
@@ -247,52 +225,61 @@ void LinkedList<T>::remove(int index)
 }
 
 template <class T>
-void LinkedList<T>::add(T Data, int index)
+void LinkedList<T>::add(T& rData, int index)
 {
     /* Adds an element to the list at the
-       specified index. One may add
-       indices that do not exist. */
-    if (index > size) throw out_of_range("Index too large.");
-    
+       specified index. One may not add
+       indeces that do not exist. */
     // check append
-    if (index == size || isEmpty())
-    {
-        add(Data);
-        return;
+    if(index>size || index<0) return;
+
+    if(index == 0){
+        Node<T>* newnode = new Node<T>(NULL, rData, NULL);
+        pHead->pPrev = newnode;
+        newnode->pNext = pHead;
+        pHead = newnode;
+        if(pTail==NULL){
+            pTail = pHead;
+        }
+        
     }
+    else if (index == size)
+    {
+        add(rData);
+    }
+    else{
 
-    Node<T> temp = (*this)[index];
-    Node<T>* pCurr = &temp;
 
-    Node<T>* newnode = new Node<T>(pCurr->pPrev,
-                                   Data,
-                                   &temp);
+        Node<T>* temp = &(*this)[index];
+        Node<T>* pCurr = temp;
 
-    // check if no prepend 
-    if (pCurr->pPrev) pCurr->pPrev->pNext = newnode;
-    pCurr->pPrev = newnode;
+        // Alternative way:
+        // Node<T>* temp = pHead;
+        // while(--index){
+        //     temp = temp->pNext;
+        // }
 
+        Node<T>* newnode = new Node<T>(NULL, rData, NULL);
+        newnode->pNext = temp->pNext;
+        newnode->pPrev = temp;
+        temp->pNext->pPrev = newnode;
+        temp->pNext = newnode;
+
+    }
     size++;
 }
 
 template <class T>
-void LinkedList<T>::add(T Data)
+void LinkedList<T>::add(T& rData)
 {
-    /* Appends and element to the list. */
-    
-    if (size == 0)
-    {
-        // list is empty
-        Node<T>* newnode = new Node<T>(Data);
-        pHead = newnode;
-        pTail = newnode;
-        size++;
-        return;
-    }
-    
+    /* Prepends and element to the list. */
+    // last element
     Node<T>* newnode = new Node<T>(pTail,
-                                   Data, NULL);
-    pTail->pNext = newnode;
+                                   rData, NULL);
+    if(pHead==NULL) 
+        pHead = newnode;
+    else 
+        pTail->pNext = newnode;
     pTail = newnode;
     size++;
 }
@@ -334,35 +321,15 @@ T* LinkedList<T>::last() const
 }
 
 template <class T>
-void LinkedList<T>::insertFirst(T Data)
+void LinkedList<T>::insertFirst(T& rData)
 {
-    this->add(Data, 0);
+    this->add(rData, 0);
 }
 
 template <class T>
-void LinkedList<T>::insertLast(T Data)
+void LinkedList<T>::insertLast(T& rData)
 {
-    this->add(Data);
-}
-
-template <class T>
-void LinkedList<T>::printReverse()
-{
-    Node<T>* pCurr = pTail;
-    if (!pCurr)
-    {
-        cout << "[]" << endl;
-        return;
-    }
-    cout << "[" << endl;
-
-    while(pCurr->pNext)
-    {
-        cout << pCurr << ", ";
-        pCurr = pCurr->pPrev;
-    }
-    cout << pCurr << "]" << endl;
-    
+    this->add(rData);
 }
 
 template <class U>
@@ -373,24 +340,19 @@ ostream& operator<<(ostream& rOStream,
     
     if (rList.size == 0)
     {
-        cout << "[]" << endl;
+        rOStream << "[]" << endl;
         return rOStream;
     }
     
-    cout << "[";
+    rOStream << "[";
     Node<U>* pNewNode = rList.pHead;
-    for(int i = 0; i < rList.size - 1; ++i)     
-    {                                           
-        cout << *pNewNode << ", ";              
-        pNewNode = pNewNode->pNext;             
+
+    while(pNewNode != NULL)
+    {
+        rOStream << pNewNode->Data << " ";
+        pNewNode = pNewNode->pNext;
     }
-    // while(pNewNode != NULL)
-    // {
-    //     cout << pNewNode->Data << ", ";
-    //     pNewNode = pNewNode->pNext;
-    // }
-    cout << *pNewNode << "]" << endl;
-    cout << "size: " << rList.size << endl;
+    rOStream << "]";
     return rOStream;
 }
         
