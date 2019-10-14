@@ -32,7 +32,7 @@ public:
     Node<T> operator*(Node<T>& rN);
     Node<T> operator/(Node<T>& rN);
     Node<T> operator%(Node<T>& rN);
-    bool operator!=( T&);
+    // bool operator!=( T&);
     Node<T>(T& rData);
     Node<T>(Node<T>* pPrev, T& rData, Node<T>* pNext);
     ~Node<T>();
@@ -53,6 +53,7 @@ class LinkedList // singley linked
 
 public:
     LinkedList(); //constructor
+    LinkedList(const LinkedList&); // copy constructor
     ~LinkedList(); //destructor
 
     bool isEmpty() const;
@@ -60,12 +61,14 @@ public:
     T* front() const;
     T* last() const;
     void remove(int index);
+    int search(T& rData);
     void add(T& rData, int index);
     void add(T& rData); // appends data
     void insertFirst(T& rData);
     void insertLast(T& rData);
     Node<T>& operator[](int index) const;  
-
+    LinkedList& operator=(const LinkedList&);
+    
     template <class U>
     friend ostream& operator<<(ostream& rOStream,
                                const LinkedList<U>& rList);
@@ -101,7 +104,7 @@ Node<T>::~Node<T>()
 template <class T>
 Node<T> Node<T>::operator=(Node<T>& rN)
 {
-    this->Data = rN->Data;
+    this->Data = rN.Data;
     return *this;
 }
 
@@ -109,35 +112,35 @@ Node<T> Node<T>::operator=(Node<T>& rN)
 template <class T>
 Node<T> Node<T>::operator+(Node<T>& rN)
 {
-    this->Data = this->Data + rN->Data;
+    this->Data = this->Data + rN.Data;
     return *this;
 }
 
 template <class T>
 Node<T> Node<T>::operator-(Node<T>& rN)
 {
-    this->Data = this->Data - rN->Data;
+    this->Data = this->Data - rN.Data;
     return *this;
 }
 
 template <class T>
 Node<T> Node<T>::operator*(Node<T>& rN)
 {
-    this->Data = this->Data * rN->Data;
+    this->Data = this->Data * rN.Data;
     return *this;
 }
 
 template <class T>
 Node<T> Node<T>::operator/(Node<T>& rN)
 {
-    this->Data = this->Data / rN->Data;
+    this->Data = this->Data / rN.Data;
     return *this;
 }
 
 template <class T>
 Node<T> Node<T>::operator%(Node<T>& rN)
 {
-    this->Data = this->Data % rN->Data;
+    this->Data = this->Data % rN.Data;
     return *this;
 }
 
@@ -161,6 +164,17 @@ ostream& operator<<(ostream& rOStream, const Node<U>& rNode)
 template <class T>
 LinkedList<T>::LinkedList()
     :pHead{NULL}, pTail{NULL}, size{0}{}
+
+template <class T>
+LinkedList<T>::LinkedList(const LinkedList<T>& other)
+{
+    Node<T>* curr = other.pHead;
+    while(curr)
+    {
+        this->add(curr->Data);
+        curr = curr->pNext;
+    }
+}
 
 template <class T>
 LinkedList<T>::~LinkedList() //destructor
@@ -215,6 +229,7 @@ void LinkedList<T>::remove(int index)
         size--;
         return;
     }
+    
     if (index == size) pTail = pCurr->pPrev;
     
     pCurr->pPrev->pNext = pCurr->pNext;
@@ -331,6 +346,65 @@ void LinkedList<T>::insertLast(T& rData)
 {
     this->add(rData);
 }
+
+template <class T>
+int LinkedList<T>::search(T& rData)
+{
+    Node<T>* pCurr = pHead;
+    if (!pHead) throw domain_error("List is Empty");
+    int index = 0;
+
+    while(pCurr)
+    {
+        if(pCurr->Data == rData)
+            return index;
+        pCurr = pCurr->pNext;
+        index++;
+    }
+
+    // no matches
+    throw invalid_argument("no such element");
+    return index;
+}
+
+template <class T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& rOther)
+{
+
+    Node<T>* pCurr = pHead;
+    Node<T>* pOCurr = rOther.pHead;
+    
+    // assume equal sizes
+    while (pCurr != NULL && pOCurr != NULL)
+    {
+        pCurr->Data = pOCurr->Data;
+        pCurr = pCurr->pNext;
+        pOCurr = pOCurr->pNext;
+    }
+
+    // either done or sizes != equal
+    // check this.size > other.size
+    Node<T>* pPrev;
+
+    // delete leftover pointers
+    while(pCurr != NULL) {
+        pPrev = pCurr;
+        pCurr = pCurr->pNext;
+        delete prev;
+        size--;
+    }
+
+    // check this.size < other.size
+    while(pOCurr != NULL) {
+        add(pOCurr->Data);
+        pOCurr = pOCurr->pNext;
+        size++;
+    }
+
+    return *this;
+}
+        
+    
 
 template <class U>
 ostream& operator<<(ostream& rOStream,
