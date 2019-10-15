@@ -1,6 +1,6 @@
 
 #include "Radio.h"
-#include "LinkedLists.h"
+#include "LinkedList.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -46,8 +46,8 @@ bool Song::operator==(Song& rSong)
     /*
       This method does not check for duration.
      */
-    return (this->title.compare(rSong.title) &&
-            this->artist.compare(rSong.artist));
+    return (this->title.compare(rSong.title) == 0 &&
+            this->artist.compare(rSong.artist) == 0);
 }
 
 Song& Song::operator=(Song& rSong)
@@ -84,11 +84,6 @@ void RadioStation::removeSong(Song& sSong)
     playList.remove(playList.search(sSong));
 }
 
-void RadioStation::playNext()
-{
-    currIndex++;
-}
-
 int RadioStation::totalTime()
 {
     int sum = 0;
@@ -98,4 +93,55 @@ int RadioStation::totalTime()
         sum += playList[i].Data.getDuration();
     }
     return sum;
+}
+
+bool RadioStation::searchSong(Song& song)
+{
+    return (playList[playList.search(song)].Data == song);
+}
+
+bool RadioStation::isEmpty()
+{
+    return playList.isEmpty();
+}
+
+void RadioStation::playNext()
+{
+    if (currIndex >= playList.length()-1)
+    {
+        cout << "We've reached the end of the playlist." << endl;
+        if(currIndex >= playList.length())
+            return;
+    }
+    Song currSong = playList[currIndex].Data;
+    cout << endl << "Playing \"" << currSong.getTitle();
+    cout << "\" by " << currSong.getArtist();
+    cout << "(" << currSong.getDuration() << " seconds...)";
+    cout << endl << endl;
+
+    currIndex++;
+}
+
+void RadioStation::listSongs()
+{
+    if (playList.length() == 0)
+    {
+        cout << "There are no songs in the playlist. Add some!" << endl;
+        return;
+    }
+
+    cout << "============================================" << endl;
+    cout << playList.length() << " song(s)." << endl << endl;
+    
+    // O(n^2)
+    for(int i = 0; i < playList.length(); ++i)
+    {
+        cout << "Title: " << playList[i].Data.getTitle() << endl;
+        cout << "Artist: " << playList[i].Data.getArtist() << endl;
+        cout << "Duration: " << playList[i].Data.getDuration() << endl;        
+        cout << endl;
+    }
+
+    cout << "============================================" << endl;
+    
 }

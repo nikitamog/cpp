@@ -26,7 +26,7 @@ void printMenu()
     cout << "(b) Delete song" << endl;
     cout << "(c) Search for a song" << endl;
     cout << "(d) Play next song" << endl;
-    cout << "(e) List all song in playlist" << endl;
+    cout << "(e) List all songs in playlist" << endl;
     cout << "(f) List total time of playlist" << endl;
     cout << "(q) Quit" << endl << endl;
 }
@@ -53,12 +53,12 @@ Song& promptSong()
 }
 
 // assuming we trust the user.
-void addSong(RadioStation& playList) {
+void addSong(RadioStation& radio) {
 
     cout << "Please select a hip tune." << endl << endl;
     
     Song newSong = promptSong();
-    playList.addSong(newSong);
+    radio.addSong(newSong);
 
     cout << "============================================" << endl;
     cout << "A new song has been added to the playlist." << endl;
@@ -67,22 +67,80 @@ void addSong(RadioStation& playList) {
 
 }
 
-void removeSong(RadioStation& playList)
+void removeSong(RadioStation& radio)
 {
-    
+    Song newSong = promptSong();
+    radio.removeSong(newSong);
+
+    cout << "============================================" << endl;
+    cout << "We removed a song for you." << endl;
+    cout << "============================================" << endl;
 }
-    
-bool promptUser(RadioStation& playList)
+
+bool searchSong(RadioStation& radio)
+{
+    Song newSong = promptSong();
+    if(radio.isEmpty())
+    {
+        cout << "Song not found. The list is empty." << endl;
+        return false;
+    }
+    int result = radio.searchSong(newSong);
+    if(result)
+    {
+        cout << "Song has been found!" << endl;
+        return true;
+    }
+    else
+    {
+        cout << "Song is not found." << endl;
+        return false;
+    }
+}
+
+void playNext(RadioStation& radio)
+{
+    radio.playNext();
+    return;
+}
+
+void listSongs(RadioStation& radio)
+{
+    radio.listSongs();
+    return;
+}
+
+void totalDuration(RadioStation& radio)
+{
+    cout << "============================================" << endl;
+    cout << "Total time: " << radio.totalTime() << endl;
+    cout << "============================================" << endl;
+    return;
+}
+
+bool promptUser(RadioStation& radio)
 {
     cout << "Choose an operation: ";
     char op;
     cin >> op;
     switch (op) {
     case 'a':
-        addSong(playList);
+        addSong(radio);
         return true;
     case 'b':
-        removeSong(playList);
+        removeSong(radio);
+        return true;
+    case 'c':
+        searchSong(radio);
+        return true;
+    case 'd':
+        playNext(radio);
+        return true;
+    case 'e':
+        listSongs(radio);
+        return true;
+    case 'f':
+        totalDuration(radio);
         return true;
     case 'q' || 'Q':
         return false;
@@ -93,11 +151,11 @@ bool promptUser(RadioStation& playList)
 int main()
 {
     welcome();
-    RadioStation playList;
+    RadioStation radio;
     do {
         printMenu();
     }
-    while(promptUser(playList));
+    while(promptUser(radio));
     return 0;
 }
 

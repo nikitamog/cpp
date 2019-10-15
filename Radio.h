@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "LinkedLists.h"
+#include "LinkedList.h"
 
 using namespace std;
 
@@ -17,7 +17,7 @@ public:
     Song()
         :title{""},artist{""},duration{0}{};
     Song(string title, string artist, int duration)
-        :title{title},artist{artist},duration{duration}{};
+        :title{title},artist{artist},duration{duration}{b};
     Song(const Song& rOther)
         :title{rOther.title},artist{rOther.artist},
          duration{rOther.duration}{};
@@ -41,9 +41,11 @@ public:
     ~RadioStation();
     void addSong(Song&);
     void removeSong(Song&);
+    bool searchSong(Song&);
     void playNext();
     int totalTime();
-
+    bool isEmpty();
+    void listSongs();
 };
     
 

@@ -56,15 +56,15 @@ public:
     LinkedList(const LinkedList&); // copy constructor
     ~LinkedList(); //destructor
 
-    bool isEmpty() const;
-    int length() const;
-    T* front() const;
-    T* last() const;
-    void remove(int index);
-    int search(T& rData);
-    void add(T& rData, int index);
+    bool isEmpty() const; // returns true of pHead is null
+    int length() const; // returns size
+    T* front() const; // returns the pointer pHead
+    T* last() const; // returns the pointer pTail
+    void remove(int index); // removes a node from the list.
+    int search(T& rData); // returns the index of the matching data value
+    void add(T& rData, int index); // adds an element to the list
     void add(T& rData); // appends data
-    void insertFirst(T& rData);
+    void insertFirst(T& rData); // 
     void insertLast(T& rData);
     Node<T>& operator[](int index) const;  
     LinkedList& operator=(const LinkedList&);
@@ -219,6 +219,7 @@ Node<T>& LinkedList<T>::operator[](int index) const
 template <class T>
 void LinkedList<T>::remove(int index)
 {
+    /* removes and element from the list */
     Node<T>* temp = &(*this)[index];
     Node<T>* pCurr =temp;
     
@@ -244,7 +245,7 @@ void LinkedList<T>::add(T& rData, int index)
 {
     /* Adds an element to the list at the
        specified index. One may not add
-       indeces that do not exist. */
+       indices that do not exist. */
     // check append
     if(index>size || index<0) return;
 
@@ -287,7 +288,7 @@ void LinkedList<T>::add(T& rData, int index)
 template <class T>
 void LinkedList<T>::add(T& rData)
 {
-    /* Prepends and element to the list. */
+    /* Appends and element to the list. */
     // last element
     Node<T>* newnode = new Node<T>(pTail,
                                    rData, NULL);
@@ -302,13 +303,18 @@ void LinkedList<T>::add(T& rData)
 template <class T>
 bool LinkedList<T>::isEmpty() const
 {
+    /* returns whether the list is empty
+       depends on the data integrity of
+       sibling methods. */
     return pHead == NULL;
 }
 
 template <class T>
 int LinkedList<T>::length() const
 {
+    /* returns the size of the list */
     /*
+    // alternative without a size variable.
     int i = 0;
     Node<T>* pCurr = pHead;
     while(pCurr != NULL)
@@ -324,6 +330,7 @@ int LinkedList<T>::length() const
 template <class T>
 T* LinkedList<T>::front() const
 {
+    /* returns the head node */
     assert(pHead != NULL);
     return pHead->Data;
 }
@@ -331,6 +338,7 @@ T* LinkedList<T>::front() const
 template <class T>
 T* LinkedList<T>::last() const
 {
+    /* returns the tail node */
     assert(pHead != NULL);
     return pTail->Data;
 }
@@ -338,18 +346,24 @@ T* LinkedList<T>::last() const
 template <class T>
 void LinkedList<T>::insertFirst(T& rData)
 {
+    /* calls a prepend on the linkedlist */
     this->add(rData, 0);
 }
 
 template <class T>
 void LinkedList<T>::insertLast(T& rData)
 {
+    /* decorator for append */
     this->add(rData);
 }
 
 template <class T>
 int LinkedList<T>::search(T& rData)
 {
+    /* searches for a matching element
+       within the list. Returns a
+       matching index. Otherwise it
+       should throw. */
     Node<T>* pCurr = pHead;
     if (!pHead) throw domain_error("List is Empty");
     int index = 0;
