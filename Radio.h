@@ -17,7 +17,7 @@ public:
     Song()
         :title{""},artist{""},duration{0}{};
     Song(string title, string artist, int duration)
-        :title{title},artist{artist},duration{duration}{b};
+        :title{title},artist{artist},duration{duration}{};
     Song(const Song& rOther)
         :title{rOther.title},artist{rOther.artist},
          duration{rOther.duration}{};

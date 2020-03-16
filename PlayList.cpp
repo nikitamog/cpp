@@ -14,7 +14,8 @@ using namespace std;
 
 void welcome()
 {
-    cout << "==================================";
+    /* print welcome message */
+    cout << "============================================" << endl;
     cout << endl;
     cout << "Welcome to the Bellevue Radio!" << endl;
     cout << "Easy listening bit by byte." << endl;;
@@ -54,8 +55,10 @@ Song& promptSong()
 
 // assuming we trust the user.
 void addSong(RadioStation& radio) {
-
+    /* prompts user for a new song.
+       adds it to the playlist. */
     cout << "Please select a hip tune." << endl << endl;
+    cout << "============================================" << endl;
     
     Song newSong = promptSong();
     radio.addSong(newSong);
@@ -69,6 +72,8 @@ void addSong(RadioStation& radio) {
 
 void removeSong(RadioStation& radio)
 {
+    /* prompts user for a song to remove. 
+     if it exists...*/
     Song newSong = promptSong();
     radio.removeSong(newSong);
 
@@ -79,6 +84,7 @@ void removeSong(RadioStation& radio)
 
 bool searchSong(RadioStation& radio)
 {
+    cout << "============================================" << endl;
     Song newSong = promptSong();
     if(radio.isEmpty())
     {
@@ -100,18 +106,22 @@ bool searchSong(RadioStation& radio)
 
 void playNext(RadioStation& radio)
 {
+    /* display a the next song in the playlist. */
     radio.playNext();
     return;
 }
 
 void listSongs(RadioStation& radio)
 {
+    /* displays all the songs in the playlist,
+       including previous songs played.*/
     radio.listSongs();
     return;
 }
 
 void totalDuration(RadioStation& radio)
 {
+    /* pretty prints the total playlist time */
     cout << "============================================" << endl;
     cout << "Total time: " << radio.totalTime() << endl;
     cout << "============================================" << endl;
@@ -120,6 +130,8 @@ void totalDuration(RadioStation& radio)
 
 bool promptUser(RadioStation& radio)
 {
+    /* collects the user prompt and implements
+       the decision tree for the program. */
     cout << "Choose an operation: ";
     char op;
     cin >> op;
@@ -145,7 +157,8 @@ bool promptUser(RadioStation& radio)
     case 'q' || 'Q':
         return false;
     }
-    return false;
+    cout << "Invalid input. Please try again." << endl;
+    return promptUser(radio);
 }
 
 int main()

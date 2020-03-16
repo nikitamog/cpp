@@ -86,6 +86,8 @@ void RadioStation::removeSong(Song& sSong)
 
 int RadioStation::totalTime()
 {
+    /* collect duration value from each element
+       by index. Expensive algorithm. */
     int sum = 0;
     // O(n^2)
     for(int i = 0; i < playList.length(); ++i)
@@ -97,6 +99,7 @@ int RadioStation::totalTime()
 
 bool RadioStation::searchSong(Song& song)
 {
+    /* collects and returns the index of provided song. */
     return (playList[playList.search(song)].Data == song);
 }
 
@@ -107,6 +110,8 @@ bool RadioStation::isEmpty()
 
 void RadioStation::playNext()
 {
+    /* pretty prints a song and increments the current
+       song within the index. */
     if (currIndex >= playList.length()-1)
     {
         cout << "We've reached the end of the playlist." << endl;
@@ -124,6 +129,7 @@ void RadioStation::playNext()
 
 void RadioStation::listSongs()
 {
+    /* pretty prints names in the list. */
     if (playList.length() == 0)
     {
         cout << "There are no songs in the playlist. Add some!" << endl;
